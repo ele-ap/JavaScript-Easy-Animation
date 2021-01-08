@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Cube</title>
+		<style>
+			body { 
+				margin: 0; 
+				height: 100vh;
+			}
+			canvas { 
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.js"></script>
+		<script>
+            //We need a scene, a camera and the renderer
+            const scene = new THREE.Scene();
+            
+            const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 ); // parameters: Field of View, aspect ration, far, near (objects further away from the camera than the value of far or closer than near won't be rendered)
+
+            const renderer = new THREE.WebGLRenderer();
+            renderer.setClearColor('#e5e5e5');
+            renderer.setSize( window.innerWidth, window.innerHeight ); //use the width and height of the area we want to fill with our app
+
+            document.body.appendChild( renderer.domElement ); //add the renderer element to our HTML document. This is a <canvas> element the renderer uses to display the scene to us
+            
+            //scale automatically when resizing the browser
+            window.addEventListener('resize', () => {
+                renderer.setSize(window.innerWidth, window.innerHeight );
+                camera.aspect = window.innerWidth / window.innerHeight;
+
+                camera.updateProjectionMatrix();
+            })
+
+			//to create a shape we need the geometry of the shape, the material to cover it (texture) and with mesh we create the item that we can user later
+            var geometry = new THREE.BoxGeometry(1,1,1);
+            var material = new THREE.MeshLambertMaterial( { color: 0xe94f1c } );
+            var cube = new THREE.Mesh( geometry, material );
+            scene.add( cube );
+			
+			//we move the camera a bit because the item is rendered at 0,0,0 so we can't see it
+			camera.position.z = 5;
+			
+			//add light
+			var light = new THREE.PointLight(0xffffff, 1, 500);
+			light.position.set(10,0,25);
+			scene.add(light);
+
+			//Render or animate loop. This will create a loop that causes the renderer to draw the scene every time the screen is refreshed
+			function animate() {
+				requestAnimationFrame( animate );
+				//This will be run every frame (normally 60 times per second), and give the cube a nice rotation animation
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+				//
+				renderer.render( scene, camera );
+			}
+			animate();
+
+
+		</script>
+	</body>
+</html>
